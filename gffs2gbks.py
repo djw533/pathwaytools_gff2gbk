@@ -267,7 +267,7 @@ def __gff_to_patho__(gff,panaroo_dict,eggnog_dict,output_dir):
 
 def __gff3_fasta_to_singlefastas__(gff_file,output_dir):
 
-        strain = gff_file.split('/')[-1].split(".gff")[0]
+        strain = gff_file.split('/')[-1].split(".gff")[0].replace(".","_")
 
 
         fasta_file_sequence = []
@@ -290,7 +290,7 @@ def __gff3_fasta_to_singlefastas__(gff_file,output_dir):
         entries_list = (''.join(fasta_file_sequence)).split('>')
 
         for entry in entries_list:
-             contig = entry.split('\n')[0].replace("|","_")
+             contig = entry.split('\n')[0].replace("|","_").replace(".","_")
              with open("{output_dir}/{strain}/{contig}.fasta".format(output_dir=output_dir,strain=strain,contig=contig),"w") as output:
                   output.write('>'+entry)
 
@@ -353,7 +353,7 @@ def __gff_to_gbk__(gff,panaroo_dict,eggnog_dict,output_dir,species_file,protein_
     lines = data.readlines()
     data.close()
 
-    strain = gff.split('/')[-1].split(".gff")[0]
+    strain = gff.split('/')[-1].split(".gff")[0].replace(".","_")
 
 
     # get the species information:
@@ -460,7 +460,7 @@ def __gff_to_gbk__(gff,panaroo_dict,eggnog_dict,output_dir,species_file,protein_
     f = open("{output_dir}/{strain}/{strain}.gbff".format(output_dir=output_dir,strain=strain),"a")
     for contig in contigs.keys():
         ## get the length of the contig:
-        formatted_contig =  contig.replace("|","_")
+        formatted_contig =  contig.replace("|","_").replace(".","_")
         contig_length = len(''.join(contigs[contig]["sequence"]))
         #get the date:
         today = date.today()
