@@ -165,7 +165,7 @@ def __gff_to_patho__(gff,panaroo_dict,eggnog_dict,output_dir):
     lines = data.readlines()
     data.close()
 
-    strain = gff.split('/')[-1].split(".gff")[0]
+    strain = gff.split('/')[-1].split(".gff")[0].replace(".","_")
 
     os.makedirs("{output_dir}/{strain}".format(output_dir=output_dir,strain=strain))
 
@@ -188,11 +188,11 @@ def __gff_to_patho__(gff,panaroo_dict,eggnog_dict,output_dir):
             # make sure is a CDS:
             if toks[2] == "CDS":
                 #get details from each line:
-                contig = toks[0].replace("|","_")
+                contig = toks[0].replace("|","_").replace(".","_")
                 # check to see if new contig and create new file:
                 if contig != current_contig:
                     ### change pipe to underscore:
-                    contig = contig.replace("|","_")
+                    contig = contig.replace("|","_").replace(".","_")
                     ###change name back
                     current_contig = contig
 
@@ -200,7 +200,7 @@ def __gff_to_patho__(gff,panaroo_dict,eggnog_dict,output_dir):
                         output.write(";;;;;;;;;;;;;;;;;;;;;;;;;\n;; {contig}\n;;;;;;;;;;;;;;;;;;;;;;;;;\n".format(contig=contig))
 
                 #also change the name here as well if required
-                contig = contig.replace("|","_")
+                contig = contig.replace("|","_").replace(".","_")
 
                 start = toks[3]
                 end = toks[4]
@@ -288,6 +288,7 @@ def __gff3_fasta_to_singlefastas__(gff_file,output_dir):
         #sequences = ''.join(fasta_file_sequence)
 
         entries_list = (''.join(fasta_file_sequence)).split('>')
+        #print(entries_list)
 
         for entry in entries_list:
              contig = entry.split('\n')[0].replace("|","_").replace(".","_")
