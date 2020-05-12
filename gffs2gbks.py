@@ -165,7 +165,7 @@ def __gff_to_patho__(gff,panaroo_dict,eggnog_dict,output_dir):
     lines = data.readlines()
     data.close()
 
-    strain = gff.split('/')[-1].split(".gff")[0].replace(".","_")
+    strain = gff.split('/')[-1].split(".gff")[0].replace(".","_").replace("#","_")
 
     os.makedirs("{output_dir}/{strain}".format(output_dir=output_dir,strain=strain))
 
@@ -188,11 +188,11 @@ def __gff_to_patho__(gff,panaroo_dict,eggnog_dict,output_dir):
             # make sure is a CDS:
             if toks[2] == "CDS":
                 #get details from each line:
-                contig = toks[0].replace("|","_").replace(".","_")
+                contig = toks[0].replace("|","_").replace(".","_").replace("#","_")
                 # check to see if new contig and create new file:
                 if contig != current_contig:
                     ### change pipe to underscore:
-                    contig = contig.replace("|","_").replace(".","_")
+                    contig = contig.replace("|","_").replace(".","_").replace("#","_")
                     ###change name back
                     current_contig = contig
 
@@ -200,7 +200,7 @@ def __gff_to_patho__(gff,panaroo_dict,eggnog_dict,output_dir):
                         output.write(";;;;;;;;;;;;;;;;;;;;;;;;;\n;; {contig}\n;;;;;;;;;;;;;;;;;;;;;;;;;\n".format(contig=contig))
 
                 #also change the name here as well if required
-                contig = contig.replace("|","_").replace(".","_")
+                contig = contig.replace("|","_").replace(".","_").replace("#","_")
 
                 start = toks[3]
                 end = toks[4]
@@ -267,7 +267,7 @@ def __gff_to_patho__(gff,panaroo_dict,eggnog_dict,output_dir):
 
 def __gff3_fasta_to_singlefastas__(gff_file,output_dir):
 
-        strain = gff_file.split('/')[-1].split(".gff")[0].replace(".","_")
+        strain = gff_file.split('/')[-1].split(".gff")[0].replace(".","_").replace("#","_")
 
 
         fasta_file_sequence = []
@@ -291,7 +291,7 @@ def __gff3_fasta_to_singlefastas__(gff_file,output_dir):
         #print(entries_list)
 
         for entry in entries_list:
-             contig = entry.split('\n')[0].replace("|","_").replace(".","_")
+             contig = entry.split('\n')[0].replace("|","_").replace(".","_").replace("#","_")
              with open("{output_dir}/{strain}/{contig}.fasta".format(output_dir=output_dir,strain=strain,contig=contig),"w") as output:
                   output.write('>'+entry)
 
@@ -354,7 +354,7 @@ def __gff_to_gbk__(gff,panaroo_dict,eggnog_dict,output_dir,species_file,protein_
     lines = data.readlines()
     data.close()
 
-    strain = gff.split('/')[-1].split(".gff")[0].replace(".","_")
+    strain = gff.split('/')[-1].split(".gff")[0].replace(".","_").replace("#","_")
 
 
     # get the species information:
@@ -461,7 +461,7 @@ def __gff_to_gbk__(gff,panaroo_dict,eggnog_dict,output_dir,species_file,protein_
     f = open("{output_dir}/{strain}/{strain}.gbff".format(output_dir=output_dir,strain=strain),"a")
     for contig in contigs.keys():
         ## get the length of the contig:
-        formatted_contig =  contig.replace("|","_").replace(".","_")
+        formatted_contig =  contig.replace("|","_").replace(".","_").replace("#","_")
         contig_length = len(''.join(contigs[contig]["sequence"]))
         #get the date:
         today = date.today()
