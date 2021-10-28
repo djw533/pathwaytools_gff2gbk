@@ -62,10 +62,20 @@ def __parse_name_data__(input_file,output_file):
             continue
         elif unambiguous == True and ambiguous == False:
             ## start parse data of the genes:
+            line = line.replace(" Match","_Match").replace("GO Term","GO_Term").replace(", ",",")
+            line_list = line.split()
+            if not line_list:
+                continue 
 
-            gene_id = line[23:40].strip() # get the geneid
+            gene_id = line_list[0]
+            if "-MONOMER" in gene_id or "-POLYMER" in gene_id:
+                gene_id = gene_id.split("-")[0]
+            reactions = line_list[-1].strip().split(',')
+
+
+            #gene_id = line[23:40].strip() # get the geneid
             #print(gene_id)
-            reactions = line[107:].strip().split(', ') # and all the reactions
+            #reactions = line[107:].strip().split(', ') # and all the reactions
             #print(reactions)
 
             ##add gene_id to the dictionary if not already in it:
