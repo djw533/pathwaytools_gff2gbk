@@ -18,7 +18,7 @@ def parseArgs():
         parser.add_argument('-o',
             '--output',
             action='store',
-            default = "total_pwys_and_reactions_per_genome_output.csv",
+            default = "total_pwys_and_reactions_per_genome_output.tsv",
             help='Output file')
 
     except:
@@ -63,7 +63,7 @@ def main():
     #create the output file
 
     with open(args.output, "w") as output:
-        output.write("strain,pathway,reactions\n")
+        output.write("strain\tpathway\treactions\n")
 
     #1 - parse through each file
 
@@ -82,7 +82,7 @@ def main():
             #write this out:
             with open(args.output,"a") as output:
                 for pathway, reactions in pwy_evidence.items():
-                    output.write("{strain},{pathway},{reactions}\n".format(
+                    output.write("{strain}\t{pathway}\t{reactions}\n".format(
                     strain = strain, pathway = pathway, reactions = reactions
                     ))
 
