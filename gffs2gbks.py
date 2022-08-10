@@ -9,6 +9,9 @@ from datetime import date
 
 
 import multiprocessing.pool as mpp
+from multiprocessing import Pool
+import tqdm
+from functools import partial
 
 
 ###### parse arguments
@@ -186,7 +189,7 @@ def __read_eggnog_data__(input_file):
         if line.startswith("#"):
             continue
 
-        toks = line.strip().split(",")
+        toks = line.strip().split("\t")
 
         id = toks[query_ind]
         pref_name = toks[pref_name_ind]
@@ -560,7 +563,7 @@ def __gff_to_gbk__(gff,panaroo_dict,eggnog_dict,output_dir,species_file):#,prote
 
     f.close()
 
-def full_pipeline(gff,panaroo_data,eggnog_data,species_data,outdir):
+def full_pipeline(gff,panaroo_data,eggnog_data,outdir):
 
     __gff_to_patho__(gff,panaroo_data,eggnog_data,outdir)
     __gff3_fasta_to_singlefastas__(gff,outdir)
@@ -597,7 +600,7 @@ def main():
         full_pipeline,
         panaroo_data = panaroo_dict,
         eggnog_data = eggnog_dict,
-        outdir = args.outdir
+        outdir = args.output_dir
     )
 
 
