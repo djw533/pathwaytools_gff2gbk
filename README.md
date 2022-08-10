@@ -1,6 +1,6 @@
 
 
-### Pathway tools / mpwt wrapper
+# Pathway tools / mpwt wrapper
 
 Wrapper for mpwt (https://github.com/AuReMe/mpwt) to take a number of gff annotated bacterial genomes, with representative protein sequences from a pan-genome analysis annotated using eggnog-mapper (http://eggnog-mapper.embl.de/), and run them through pathway tools (http://bioinformatics.ai.sri.com/ptools/) to predict presence/absence of metabolic pathways.
 
@@ -9,10 +9,10 @@ Wrapper for mpwt (https://github.com/AuReMe/mpwt) to take a number of gff annota
 * Pathway tools - http://bioinformatics.ai.sri.com/ptools/
 * mpwt - https://github.com/AuReMe/mpwt
 
-# Python packages
+### Python packages
 * Biopython
 
-# R packages
+### R packages
 * stringr
 * tidyr
 * dplyr
@@ -20,7 +20,7 @@ Wrapper for mpwt (https://github.com/AuReMe/mpwt) to take a number of gff annota
 
 ## Example
 
-# Overview
+### Overview
 
 Given a number of bacterial genomes of known species, we want to get a nice table of presence/absence of metabolic pathways.
 
@@ -35,7 +35,7 @@ In order to to do this, the following steps will need to be performed:
 6.  Collate all presence/absence of pathways within each genome
 
 
-# Worked example
+### Worked example
 
 1.  Get representative sequences of all genes across all strains (using `panaroo`)
 
