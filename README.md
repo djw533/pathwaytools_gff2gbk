@@ -11,6 +11,7 @@ Wrapper for mpwt (https://github.com/AuReMe/mpwt) to take a number of gff annota
 
 ### Python packages
 * Biopython
+* tqdm
 
 ### R packages
 * stringr
@@ -47,11 +48,13 @@ So, running from a terminal in the example folder, we will run panaroo, using fo
 panaroo -i 1_assemblies/*.gff -o 2_panaroo -t 4 --clean-mode moderate
 ```
 
-2.  Get functional annotation of these genes to plug into metabolic reaction prediction (e.g. EC numbers, GO terms), using `eggnog-mapper`.
+
+2.  Get functional annotation of these genes to plug into metabolic reaction prediction (e.g. EC numbers, GO terms), using `eggnog-mapper`
 
 Panaroo will output a fasta file of representative genes from the pan genome: `pan_genome_reference.fa`. This will be used as input to eggnog-mapper, which can either be run locally or using the webservice http://eggnog-mapper.embl.de/. `pan_genome_reference.fa` can either be used directly as input as nucleotide gene sequences (which will then be translated by eggnog-mapper) or translated manually beforehand, e.g. using `fastaq translate`.
 
 Eggnog mapper will produce a number of files, of which we need `out.emapper.annotations`.
+
 
 
 3.  Apply functional annotation to each annotated genome and rewrite out as genbank files in the directory hierarchy needed for `mpwt` to run
@@ -89,9 +92,10 @@ From this base directory, we will now run `gffs2gbks.py` which will take these g
 python3 ../gffs2gbks.py -g 1_assemblies/*.gff -p 2_panaroo/gene_presence_absence.csv -e 3_eggnog/out.emapper.annotations -o 4_mpwt_input -t 1
 ```
 
+
 4.  Create a tsv file with the strain name and the NCBI taxon number for the strain - for `mpwt`
 
-We now need to put a file named `taxon_id.tsv` into `4_mpwt_input` with two tab delimited columns: 1 - the strain name in the gff file, and 2 - the NCBI taxon id (https://www.ncbi.nlm.nih.gov/taxonomy/). For this example, the contents of the file is shown below:
+We now need to put a file named `taxon_id.tsv` into `4_mpwt_input` with two tab delimited columns: 1 - the strain name in the gff file, and 2 - the NCBI taxon id (https://www.ncbi.nlm.nih.gov/taxonomy/). For this example, the contents of the file is shown below, and can be copied into the appropriately named file as above.
 
 ```
 species	taxon_id
@@ -100,6 +104,7 @@ SJC1036	615
 SJC1039	615
 ```
 
+
 5.  Run pathway tools by using `mpwt`
 
 We can now run pathway tools by using this directory as input to `mpwt`.
@@ -107,6 +112,7 @@ We can now run pathway tools by using this directory as input to `mpwt`.
 ```
 mpwt -f 4_mpwt_input/ -o 5_mpwt_output --patho --cpu 4 -v
 ```
+
 
 6.  Collate all presence/absence of pathways within each genome
 
