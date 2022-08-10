@@ -102,7 +102,7 @@ SJC1039	615
 
 5.  Run pathway tools by using `mpwt`
 
-We can now run pathway tools buy using this directory as input to `mpwt`.
+We can now run pathway tools by using this directory as input to `mpwt`.
 
 ```
 mpwt -f 4_mpwt_input/ -o 5_mpwt_output --patho --cpu 4 -v
