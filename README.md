@@ -1,6 +1,6 @@
 
 
-# Pathway tools / mpwt pre- and post-processing tool
+# Pathway tools / mpwt pre- and post-processing scripts
 
 A set of scripts to take a number of gff annotated bacterial genomes, with representative protein sequences from a pan-genome analysis annotated using eggnog-mapper (http://eggnog-mapper.embl.de/), and run them through pathway tools (http://bioinformatics.ai.sri.com/ptools/) by using mpwt (https://github.com/AuReMe/mpwt) to predict presence/absence of metabolic pathways.
 
