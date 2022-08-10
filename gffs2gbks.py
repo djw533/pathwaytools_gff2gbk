@@ -38,10 +38,10 @@ def parseArgs():
 			    action='store',
                 required=True,
 			    help='Panaroo gene_presence_absence.csv file')
-        parser.add_argument('-s',
-			    '--species',
-			    action='store',
-			    help='Species information as csv file - strain,genus_species name (with header)')
+        # parser.add_argument('-s',
+		# 	    '--species',
+		# 	    action='store',
+		# 	    help='Species information as csv file - strain,genus_species name (with header)')
         parser.add_argument('-o',
 			    '--output_dir',
 			    action='store',
@@ -172,11 +172,11 @@ def __read_eggnog_data__(input_file):
 
     colnames = lines[4].strip("#").strip("\n").split("\t")
 
-    query_ind = lines.index("query")
-    pref_name_ind = lines.index("Preferred_name")
-    function_ind = lines.index("Description")
-    GO_ind = lines.index("GOs")
-    EC_ind = lines.index("EC")
+    query_ind = colnames.index("query")
+    pref_name_ind = colnames.index("Preferred_name")
+    function_ind = colnames.index("Description")
+    GO_ind = colnames.index("GOs")
+    EC_ind = colnames.index("EC")
 
 
     eggnog_dict = {}
@@ -395,7 +395,7 @@ def __gff_to_fasta__(gff_file, type):
 
 
 
-def __gff_to_gbk__(gff,panaroo_dict,eggnog_dict,output_dir,species_file,protein_sequences):
+def __gff_to_gbk__(gff,panaroo_dict,eggnog_dict,output_dir,species_file):#,protein_sequences):
 
     data = open(gff)
     lines = data.readlines()
@@ -560,7 +560,7 @@ def __gff_to_gbk__(gff,panaroo_dict,eggnog_dict,output_dir,species_file,protein_
 
     f.close()
 
-def full_pipeline(gff,panaroo_data,eggnog_data,outdir):
+def full_pipeline(gff,panaroo_data,eggnog_data,species_data,outdir):
 
     __gff_to_patho__(gff,panaroo_data,eggnog_data,outdir)
     __gff3_fasta_to_singlefastas__(gff,outdir)
