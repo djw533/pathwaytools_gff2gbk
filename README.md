@@ -1,8 +1,8 @@
 
 
-# Pathway tools / mpwt wrapper
+# Pathway tools / mpwt pre- and post-processing tool
 
-Wrapper for mpwt (https://github.com/AuReMe/mpwt) to take a number of gff annotated bacterial genomes, with representative protein sequences from a pan-genome analysis annotated using eggnog-mapper (http://eggnog-mapper.embl.de/), and run them through pathway tools (http://bioinformatics.ai.sri.com/ptools/) to predict presence/absence of metabolic pathways.
+A set of scripts to take a number of gff annotated bacterial genomes, with representative protein sequences from a pan-genome analysis annotated using eggnog-mapper (http://eggnog-mapper.embl.de/), and run them through pathway tools (http://bioinformatics.ai.sri.com/ptools/) by using mpwt (https://github.com/AuReMe/mpwt) to predict presence/absence of metabolic pathways.
 
 ## Dependencies
 
@@ -23,9 +23,9 @@ Wrapper for mpwt (https://github.com/AuReMe/mpwt) to take a number of gff annota
 
 ### Overview
 
-Given a number of bacterial genomes of known species, we want to get a nice table of presence/absence of metabolic pathways.
+Given a number of bacterial genomes of known species, we want to get a table of presence/absence of metabolic pathways.
 
-We have three _S. marcescens_ annotated genomes in gff format that we will use as input.
+For this example we have three _S. marcescens_ annotated genomes in gff format that we will use as input.
 
 In order to to do this, the following steps will need to be performed:
 1.  Get representative sequences of all genes across all strains (using `panaroo`)
@@ -42,7 +42,7 @@ In order to to do this, the following steps will need to be performed:
 
 Firstly we will take the _S. marcescens_ genomes that are in the example folder, and then perform a pan genome analysis using `panaroo`.
 
-So, running from a terminal in the example folder, we will run panaroo, using four threads and `--clean-mode moderate`
+So, running from a terminal in the `example` folder, we will run panaroo, using four threads and `--clean-mode moderate`
 
 ```
 panaroo -i 1_assemblies/*.gff -o 2_panaroo -t 4 --clean-mode moderate
