@@ -8,6 +8,9 @@ from Bio.Seq import reverse_complement
 from datetime import date
 
 
+import multiprocessing.pool as mpp
+
+
 ###### parse arguments
 
 def parseArgs():
@@ -44,12 +47,41 @@ def parseArgs():
 			    action='store',
                 default="formatted_gbks",
 			    help='Output directory, default=[formatted_gbks]. Will not write over a previously existing output folder!')
+        parser.add_argument('-t',
+			    '--threads',
+			    action='store',
+                default="1",
+			    help='Number of threads. default=1')
 
     except:
         print("An exception occurred with argument parsing. Check your provided options.")
         traceback.print_exc()
 
     return parser.parse_args()
+
+
+def istarmap(self, func, iterable, chunksize=1):
+    """starmap-version of imap
+    """
+    self._check_running()
+    if chunksize < 1:
+        raise ValueError(
+            "Chunksize must be 1+, not {0:n}".format(
+                chunksize))
+
+    task_batches = mpp.Pool._get_tasks(func, iterable, chunksize)
+    result = mpp.IMapIterator(self)
+    self._taskqueue.put(
+        (
+            self._guarded_task_generation(result._job,
+                                          mpp.starmapstar,
+                                          task_batches),
+            result._set_length
+        ))
+    return (item for chunk in result for item in chunk)
+
+
+mpp.Pool.istarmap = istarmap
 
 
 def __read_gene_presence_absence__(input_file):
@@ -136,17 +168,32 @@ def __read_eggnog_data__(input_file):
     lines = data.readlines()
     data.close()
 
+    #get the indices of the colnames
+
+    colnames = lines[4].strip("#").strip("\n").split("\t")
+
+    query_ind = lines.index("query")
+    pref_name_ind = lines.index("Preferred_name")
+    function_ind = lines.index("Description")
+    GO_ind = lines.index("GOs")
+    EC_ind = lines.index("EC")
+
+
     eggnog_dict = {}
 
     for line in lines:
 
+        if line.startswith("#"):
+            continue
+
         toks = line.strip().split(",")
 
-        id = toks[0]
-        pref_name = toks[5]
-        GO_terms = toks[6].split(';')
-        EC_terms = toks[7].split(';')
-        function = toks[20]
+        id = toks[query_ind]
+        pref_name = toks[pref_name_ind]
+        GO_terms = toks[GO_ind].split(';')
+        EC_terms = toks[EC_ind].split(';')
+        function = toks[function_ind]
+
 
         eggnog_dict[id] = {}
         eggnog_dict[id]["pref_name"] = pref_name
@@ -511,23 +558,12 @@ def __gff_to_gbk__(gff,panaroo_dict,eggnog_dict,output_dir,species_file,protein_
             #write the product first:
             f.write('\tproduct')
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     f.close()
 
+def full_pipeline(gff,panaroo_data,eggnog_data,outdir):
+
+    __gff_to_patho__(gff,panaroo_data,eggnog_data,outdir)
+    __gff3_fasta_to_singlefastas__(gff,outdir)
 
 
 
@@ -553,15 +589,35 @@ def main():
 
     eggnog_dict = __read_eggnog_data__(args.eggnog)
 
+    # 3 - run pipeline to convert into format that mpwt needs:
+    # (Use this data with each gff file to convert them to genbanks with the same information for each grouped gene)
 
 
-    for gff in args.gff:
-        #protein_sequences = __gff_to_fasta__(gff,"prot")
-        #__gff_to_gbk__(gff,panaroo_dict,eggnog_dict,args.output_dir,args.species,protein_sequences)
-        __gff_to_patho__(gff,panaroo_dict,eggnog_dict,args.output_dir)
-        __gff3_fasta_to_singlefastas__(gff,args.output_dir)
+    func = partial(
+        full_pipeline,
+        panaroo_data = panaroo_dict,
+        eggnog_data = eggnog_dict,
+        outdir = args.outdir
+    )
 
-    #3. Use this data with each gff file to convert them to genbanks with the same information for each grouped gene
+
+
+    with Pool(int(args.threads)) as pool:
+
+        for split_fasta in tqdm.tqdm(pool.istarmap(func, zip(args.gff)), total=len(args.gff)):
+            pass
+
+
+
+
+
+
+    # for gff in args.gff:
+    #     #protein_sequences = __gff_to_fasta__(gff,"prot")
+    #     #__gff_to_gbk__(gff,panaroo_dict,eggnog_dict,args.output_dir,args.species,protein_sequences)
+    #     __gff_to_patho__(gff,panaroo_dict,eggnog_dict,args.output_dir)
+    #     __gff3_fasta_to_singlefastas__(gff,args.output_dir)
+
 
 
 
